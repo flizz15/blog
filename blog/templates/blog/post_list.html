@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% extends 'blog/base.html' %}
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Home!</title>
+
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        
+        <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    </head>
+
+    <body>
+
+        {% block content %}
+            {% for post in posts %}
+                <div class="post">
+                    <div class="date">
+                        <p>{{ post.published_date }}</p>
+                    </div>
+                    <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+                    <p>{{ post.text|linebreaksbr }}</p>
+                    <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}
+                        {% if user.is_authenticated and post.unapproved_comments.count %}
+                            (+{{ post.unapproved_comments.count }} unapproved)
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        {% endblock %}
+    </body>
+</html>
